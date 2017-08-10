@@ -1,6 +1,6 @@
 import tensorflow as tf
 import numpy as np
-%autoindent
+
 try:
     from tqdm import tqdm
 except ImportError:
@@ -44,6 +44,7 @@ def to_onehot(labels,nclasses = 5):
 
 onehot = to_onehot(labels)
 
+
 # Split data into training and validation
 indices = np.random.permutation(train.shape[0])
 valid_cnt = int(train.shape[0] * 0.1)
@@ -69,7 +70,7 @@ W = tf.Variable(tf.zeros([1296,5]))
 b = tf.Variable(tf.zeros([5]))
 
 # Just initialize
-sess.run(tf.initialize_all_variables())
+sess.run(tf.global_variables_initializer())
 
 # Define model
 y = tf.nn.softmax(tf.matmul(x,W) + b)
@@ -78,9 +79,7 @@ y = tf.nn.softmax(tf.matmul(x,W) + b)
 
 
 # Climb on cross-entropy
-cross_entropy = tf.reduce_mean(
-        tf.nn.softmax_cross_entropy_with_logits(
-        y + 1e-50, y_))
+cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y + 1e-50, y_))
 
 # How we train
 train_step = tf.train.GradientDescentOptimizer(

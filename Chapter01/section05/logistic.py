@@ -1,6 +1,6 @@
 import tensorflow as tf
 import numpy as np
-%autoindent
+
 try:
     from tqdm import tqdm
 except ImportError:
@@ -8,7 +8,7 @@ except ImportError:
         return x
 
 # Load data
-data = np.load('data_with_labels.npz')
+data = np.load('../data_with_labels.npz')
 train = data['arr_0']/255.
 labels = data['arr_1']
 
@@ -69,7 +69,7 @@ W = tf.Variable(tf.zeros([1296,5]))
 b = tf.Variable(tf.zeros([5]))
 
 # Just initialize
-sess.run(tf.initialize_all_variables())
+sess.run(tf.global_variables_initializer())
 
 # Define model
 y = tf.nn.softmax(tf.matmul(x,W) + b)
@@ -79,8 +79,7 @@ y = tf.nn.softmax(tf.matmul(x,W) + b)
 
 # Climb on cross-entropy
 cross_entropy = tf.reduce_mean(
-        tf.nn.softmax_cross_entropy_with_logits(
-        y + 1e-50, y_))
+        tf.nn.softmax_cross_entropy_with_logits(logits=y + 1e-50, labels=y_))
 
 # How we train
 train_step = tf.train.GradientDescentOptimizer(
@@ -127,3 +126,6 @@ for i in range(5):
     plts[i].pcolor(W.eval()[:,i].reshape([36,36]))
 
 
+import time
+while True:
+    time.sleep(1)
