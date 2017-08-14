@@ -5,3 +5,5 @@ import numpy as np
 import tensorflow as tf
 
 print('ok')
+with tf.Session() as sess:
+  sess.run()
